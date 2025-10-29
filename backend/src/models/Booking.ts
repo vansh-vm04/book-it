@@ -1,14 +1,14 @@
 import { Schema, model, Document } from "mongoose";
 
 export interface PromoDocument extends Document {
-  code: string
-  discountValue: number
+  code: string;
+  discountValue: number;
 }
 
 const PromoSchema = new Schema<PromoDocument>({
   code: { type: String, required: true, unique: true },
-  discountValue: { type: Number, required: true }
-})
+  discountValue: { type: Number, required: true },
+});
 
 export interface BookingDocument extends Document {
   experienceId: Schema.Types.ObjectId;
@@ -18,6 +18,7 @@ export interface BookingDocument extends Document {
   promoCode?: string;
   quantity: number;
   totalAmount: number;
+  refId: string;
   createdAt: Date;
 }
 
@@ -34,9 +35,10 @@ const BookingSchema = new Schema<BookingDocument>(
     promoCode: { type: String },
     quantity: { type: Number, required: true, default: 1 },
     totalAmount: { type: Number, required: true },
+    refId: { type: String, required: true },
   },
   { timestamps: true }
 );
 
 export const Booking = model<BookingDocument>("Booking", BookingSchema);
-export const Promo = model<PromoDocument>("Promo", PromoSchema)
+export const Promo = model<PromoDocument>("Promo", PromoSchema);

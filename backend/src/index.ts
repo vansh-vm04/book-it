@@ -5,6 +5,7 @@ import { Experience, type Slot } from "./models/Experience.js";
 import { Booking, Promo } from "./models/Booking.js";
 import { connectDB } from "./config/db.js";
 import { generateRefId } from "./utils/refGenerater.js";
+import mongoose from "mongoose";
 dotenv.config();
 
 connectDB();
@@ -17,6 +18,19 @@ app.use(
   })
 );
 app.use(express.json());
+
+app.get('/api/ready', async(req,res)=>{
+    try {
+      const dbState = mongoose.connection.readyState;
+      if(dbState == 1){
+        res.sendStatus(200);
+      }else{
+        res.sendStatus(500);
+      }
+    } catch (error) {
+      res.sendStatus(500);
+    }
+})
 
 app.post("/api/experiences", async (req, res) => {
   try {

@@ -11,13 +11,14 @@ import { useEffect, useState } from "react";
 export default function Details() {
   const [experience, setExperience] = useState<Experience | null>(null);
   const { id } = useParams();
-  const { data, loading } = useFetch(
+  const { data } = useFetch(
     `${process.env.NEXT_PUBLIC_BACKEND_ORIGIN}/api/experiences/${id}`
   );
   const uniqueDates = [...new Set(experience?.slots?.map((s) => s.date))];
   const [selectedDate, setSelectedDate] = useState(uniqueDates[0]);
   const [selectedTime, setSelectedTime] = useState("");
   const [qty, setQty] = useState(1);
+  const [loading, setloading] = useState(true)
   const slotsForDate = experience?.slots?.filter(
     (s) => s.date === selectedDate
   );
@@ -41,8 +42,16 @@ export default function Details() {
   useEffect(() => {
     if (data?.data) {
       setExperience(data.data);
+      setloading(false)
     }
   }, [data, selectedTime]);
+
+  const checkoutPage = () => {
+    setloading(true)
+    router.push(
+      `/checkout?experienceId=${experience?._id}&date=${selectedDate}&time=${selectedTime}&qty=${qty}`
+    );
+  };
 
   if (loading) {
     return <Loading />;
@@ -176,11 +185,7 @@ export default function Details() {
           </div>
           <button
             disabled={!selectedDate || !selectedTime}
-            onClick={() =>
-              router.push(
-                `/checkout?experienceId=${experience?._id}&date=${selectedDate}&time=${selectedTime}&qty=${qty}`
-              )
-            }
+            onClick={checkoutPage}
             className={`w-full ${
               selectedDate && selectedTime
                 ? "bg-yellow-400 text-black hover:bg-amber-300 hover:cursor-pointer"

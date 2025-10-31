@@ -11,7 +11,8 @@ export default function Home() {
   const router = useRouter();
   const params = useSearchParams();
   const search = params.get("search") || "";
-  const { data, loading } = useFetch(
+  const [loading, setloading] = useState(true)
+  const { data } = useFetch(
     `${process.env.NEXT_PUBLIC_BACKEND_ORIGIN}/api/experiences`
   );
   const [experiences, setExperiences] = useState<Experience[]>([]);
@@ -20,6 +21,7 @@ export default function Home() {
     if (data.data) {
       const exp = data?.data;
       setExperiences(exp);
+      setloading(false)
     }
   }, [data]);
 
@@ -28,6 +30,7 @@ export default function Home() {
   );
 
   const viewDetails = (expId:string)=>{
+    setloading(true)
     router.push(`/details/${expId}`)
   }
 

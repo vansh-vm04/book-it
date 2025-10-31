@@ -3,6 +3,8 @@
 A full-stack booking platform where users can browse experiences, select available slots, apply promo codes, and confirm bookings.  
 Built using **Next.js**, **Express.js**, **TypeScript**, and **MongoDB**.
 
+- **🌐 Hosted Application:** [book-with-hd.vercel.app](https://book-with-hd.vercel.app)
+
 ---
 
 ## 🧩 Features
@@ -75,10 +77,8 @@ The app will run at http://localhost:3000
 ### ✅ Deliverables Checklist
  Freely available data and royalty-free images
 
- Full booking flow — browsing to confirmation
+ Full booking flow, browsing to confirmation
 
- Hosted on cloud (Render / Railway / Vercel)
+ Hosted on cloud (Render, Vercel)
 
  Complete setup and run instructions in README
-
- Hosted link + GitHub repository link provided

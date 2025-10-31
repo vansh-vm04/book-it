@@ -1,7 +1,7 @@
 import express from "express";
 import cors from "cors";
 import dotenv from "dotenv";
-import { Experience } from "./models/Experience.js";
+import { Experience, type Slot } from "./models/Experience.js";
 import { Booking, Promo } from "./models/Booking.js";
 import { connectDB } from "./config/db.js";
 import { generateRefId } from "./utils/refGenerater.js";
@@ -10,7 +10,12 @@ dotenv.config();
 connectDB();
 const app = express();
 const port = process.env.PORT || 4000;
-app.use(cors());
+const allowedOrigin = process.env.FRONTEND_ORIGIN;
+app.use(
+  cors({
+    origin: allowedOrigin,
+  })
+);
 app.use(express.json());
 
 app.post("/api/experiences", async (req, res) => {
@@ -33,13 +38,15 @@ app.post("/api/experiences", async (req, res) => {
 
 app.post("/api/experiences/:id/slots", async (req, res) => {
   try {
-    const { date, time, capacity, price } = req.body;
+    const {slots} = req.body;
     const exp = await Experience.findById(req.params.id);
     if (!exp)
       return res
         .status(404)
         .json({ ok: false, message: "Experience not found" });
-    exp.slots.push({ date, time, capacity, price, bookedCount: 0 });
+    slots.forEach((s:Slot)=>{
+      exp.slots.push(s);
+    })
     await exp.save();
     res.status(201).json({ ok: true, data: exp });
   } catch (error) {

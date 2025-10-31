@@ -21,7 +21,7 @@ export default function Checkout() {
   const [tax, settax] = useState(0);
   const [subTotal, setsubTotal] = useState(0);
   const [total, settotal] = useState(0);
-  const [discountPrice, setDiscountPrice] = useState(0)
+  const [discountPrice, setDiscountPrice] = useState(0);
   const [form, setForm] = useState({
     name: "",
     email: "",
@@ -87,7 +87,7 @@ export default function Checkout() {
       }
       console.log(response.data);
       const discount = (total / 100) * response.data.data.discountValue;
-      setDiscountPrice(discount)
+      setDiscountPrice(discount);
       settotal(total - discount);
       setpromoApplied(true);
       setMessage(`Promo code applied! you saved ₹${discount}`);
@@ -108,7 +108,7 @@ export default function Checkout() {
   const handleConfirm = async (e: FormEvent) => {
     e.preventDefault();
     try {
-      setloading(true)
+      setloading(true);
       const response = await axios.post(
         `${process.env.NEXT_PUBLIC_BACKEND_ORIGIN}/api/booking`,
         {
@@ -129,8 +129,8 @@ export default function Checkout() {
       router.push(`/confirmation?refId=${response.data.data.refId}`);
     } catch {
       //add toast
-    } finally{
-      setloading(false)
+    } finally {
+      setloading(false);
     }
   };
 
@@ -187,12 +187,15 @@ export default function Checkout() {
               disabled={promoApplied}
               type="text"
               value={form.promo}
-              onChange={(e) => setForm({ ...form, promo: (e.target.value).trim().toUpperCase() })}
+              onChange={(e) =>
+                setForm({ ...form, promo: e.target.value.trim().toUpperCase() })
+              }
               placeholder="Promo code"
               className="w-full border-none bg-gray-200 rounded-md px-3 py-2 text-sm outline-none"
             />
             {promoApplied ? (
               <button
+                type="button"
                 disabled={disable}
                 onClick={removePromo}
                 className="bg-red-500 hover:cursor-pointer hover:bg-red-800 text-white text-sm px-5 rounded-md"
@@ -201,11 +204,12 @@ export default function Checkout() {
               </button>
             ) : (
               <button
+                type="button"
                 disabled={disable}
                 onClick={applyPromo}
                 className="bg-black hover:cursor-pointer hover:bg-gray-800 text-white text-sm px-5 rounded-md"
               >
-                Apply
+                {disable ? "Applying.." : "Apply"}
               </button>
             )}
           </div>
@@ -249,10 +253,12 @@ export default function Checkout() {
             <p className="text-gray-500">Taxes</p>
             <p>₹{tax}</p>
           </div>
-          {promoApplied && <div className="flex justify-between mb-3">
-            <p className="text-yellow-500">Discount - {form.promo}</p>
-            <p className="text-yellow-500">-₹{discountPrice}</p>
-          </div>}
+          {promoApplied && (
+            <div className="flex justify-between mb-3">
+              <p className="text-yellow-500">Discount - {form.promo}</p>
+              <p className="text-yellow-500">-₹{discountPrice}</p>
+            </div>
+          )}
           <hr className="my-3" />
           <div className="flex justify-between font-semibold mb-4">
             <p>Total</p>

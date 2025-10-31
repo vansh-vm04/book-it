@@ -85,10 +85,10 @@ export default function Checkout() {
         return;
       }
       console.log(response.data);
-      const discount = response.data.data.discountValue;
+      const discount = (total / 100) * response.data.data.discountValue;
       settotal(total - discount);
       setpromoApplied(true);
-      setMessage(`Discount of ₹${discount} applied`);
+      setMessage(`Promo code applied! you saved ₹${discount}`);
     } catch {
       setMessage("Invalid promo code, try another");
     } finally {
@@ -97,8 +97,8 @@ export default function Checkout() {
   };
 
   const removePromo = () => {
-    setForm({...form, promo:""})
-    setMessage("")
+    setForm({ ...form, promo: "" });
+    setMessage("");
     settotal(subTotal + tax);
     setpromoApplied(false);
   };
@@ -106,6 +106,7 @@ export default function Checkout() {
   const handleConfirm = async (e: FormEvent) => {
     e.preventDefault();
     try {
+      setloading(true)
       const response = await axios.post(
         `${process.env.NEXT_PUBLIC_BACKEND_ORIGIN}/api/booking`,
         {
@@ -126,6 +127,8 @@ export default function Checkout() {
       router.push(`/confirmation?refId=${response.data.data.refId}`);
     } catch {
       //add toast
+    } finally{
+      setloading(false)
     }
   };
 
@@ -135,7 +138,10 @@ export default function Checkout() {
 
   return (
     <div className="min-h-screen pt-28 max-sm:pt-44 bg-white px-4 sm:px-8 md:px-12 lg:px-32 py-8 font-sans">
-      <div className="flex mb-6 items-center gap-2">
+      <div
+        onClick={() => router.push(`/details/${id}`)}
+        className="flex mb-6 w-fit hover:cursor-pointer items-center gap-2"
+      >
         <Back />
         <h2 className="text-lg font-medium text-black">Checkout</h2>
       </div>
@@ -168,34 +174,18 @@ export default function Checkout() {
             </div>
           </div>
 
-          <div className="flex flex-wrap items-center gap-2 text-sm mb-2">
-            <span className="text-gray-600">Available Coupons:</span>
-            <span
-              onClick={() => setForm({ ...form, promo: "WELCOME10" })}
-              className="bg-yellow-100 text-yellow-800 px-2 py-0.5 rounded-md font-medium cursor-pointer hover:bg-yellow-200 transition"
-            >
-              WELCOME10
-            </span>
-            <span
-              onClick={() => setForm({ ...form, promo: "FESTIVE50" })}
-              className="bg-yellow-100 text-yellow-800 px-2 py-0.5 rounded-md font-medium cursor-pointer hover:bg-yellow-200 transition"
-            >
-              FESTIVE50
-            </span>
-            <span
-              onClick={() => setForm({ ...form, promo: "TRAVEL25" })}
-              className="bg-yellow-100 text-yellow-800 px-2 py-0.5 rounded-md font-medium cursor-pointer hover:bg-yellow-200 transition"
-            >
-              TRAVEL25
-            </span>
-          </div>
+          <span className="text-xs text-black">
+            Apply{" "}
+            <span className="text-xs text-yellow-500">{" TRAVEL25 "}</span> for
+            instant 25% discount
+          </span>
 
-          <div className="flex gap-2 ">
+          <div className="flex gap-2 mt-2">
             <input
               disabled={promoApplied}
               type="text"
               value={form.promo}
-              onChange={(e) => setForm({ ...form, promo: e.target.value })}
+              onChange={(e) => setForm({ ...form, promo: (e.target.value).trim().toUpperCase() })}
               placeholder="Promo code"
               className="w-full border-none bg-gray-200 rounded-md px-3 py-2 text-sm outline-none"
             />
@@ -218,11 +208,12 @@ export default function Checkout() {
             )}
           </div>
           {message && (
-            <span className="text-sm  text-yellow-500">{message}</span>
+            <span className="text-xs  text-yellow-500">{message}</span>
           )}
 
           <div className="flex items-center mt-4 gap-2 text-sm">
             <input
+              className="accent-black size-4"
               type="checkbox"
               checked={form.agree}
               onChange={(e) => setForm({ ...form, agree: e.target.checked })}

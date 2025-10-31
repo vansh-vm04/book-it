@@ -43,7 +43,7 @@ export default function Home() {
         {filtered.map((exp, i) => (
           <div
             key={i}
-            className="bg-gray-100 border border-gray-200 rounded-xl overflow-hidden shadow-sm hover:shadow-md transition"
+            className="rounded-xl bg-card overflow-hidden transition"
           >
             <div className="relative w-full h-48">
               <Image
@@ -58,11 +58,11 @@ export default function Home() {
                 <h2 className="text-md text-black font-semibold">
                   {exp.title}
                 </h2>
-                <span className="text-xs bg-gray-300 text-gray-700 px-2 py-0.5 rounded">
+                <span className="text-xs font-medium tag px-2 py-0.5 rounded">
                   {exp.location}
                 </span>
               </div>
-              <p className="text-sm text-gray-600 mb-3">
+              <p className="text-sm desc-text mb-3">
                 Curated small-group experience. Certified guide. Safety first
                 with gear included.
               </p>
@@ -73,7 +73,7 @@ export default function Home() {
                     ₹{exp?.slots[0]?.price ?? "999"}
                   </span>
                 </p>
-                <button onClick={()=>viewDetails(exp?._id)} className="bg-yellow-400 hover:bg-amber-300 hover:cursor-pointer text-black text-sm font-medium px-3 py-1.5 rounded-md">
+                <button onClick={()=>viewDetails(exp?._id)} className="bg-btn hover:cursor-pointer transition-colors text-black text-sm font-medium px-3 py-1.5 rounded-md">
                   View Details
                 </button>
               </div>

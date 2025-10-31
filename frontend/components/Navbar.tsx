@@ -25,7 +25,7 @@ export const Navbar = () => {
         />
         <button
           onClick={handleSearch}
-          className="bg-yellow-400 hover:cursor-pointer hover:bg-amber-300 text-black py-2 font-medium rounded-md px-5 text-sm"
+          className="bg-btn hover:cursor-pointer text-black py-2 font-medium rounded-md px-5 text-sm"
         >
           Search
         </button>

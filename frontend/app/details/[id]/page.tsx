@@ -93,7 +93,7 @@ export default function Details() {
                 }}
                 className={`px-4 py-1.5 rounded-md text-sm ${
                   selectedDate === d
-                    ? "bg-yellow-400 text-black"
+                    ? "bg-btn text-black"
                     : "bg-gray-100 text-gray-700"
                 }`}
               >
@@ -116,7 +116,7 @@ export default function Details() {
                     soldOut
                       ? "bg-gray-100 text-gray-400"
                       : selectedTime === s.time
-                      ? "bg-yellow-400 text-black"
+                      ? "bg-btn text-black"
                       : "border text-gray-700"
                   }`}
                 >
@@ -188,7 +188,7 @@ export default function Details() {
             onClick={checkoutPage}
             className={`w-full ${
               selectedDate && selectedTime
-                ? "bg-yellow-400 text-black hover:bg-amber-300 hover:cursor-pointer"
+                ? "bg-btn text-black hover:cursor-pointer"
                 : "bg-gray-200 text-gray-500 hover:cursor-not-allowed"
             } font-medium py-2 rounded-md`}
           >

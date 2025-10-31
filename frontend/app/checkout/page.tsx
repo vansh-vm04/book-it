@@ -269,7 +269,7 @@ export default function Checkout() {
             disabled={!form.agree || !form.name || !form.email || disable}
             className={`w-full py-2 rounded-md font-medium ${
               form.agree && form.name && form.email
-                ? "bg-yellow-400 text-black hover:bg-amber-300 hover:cursor-pointer"
+                ? "text-black bg-btn hover:cursor-pointer"
                 : "bg-gray-200 text-gray-400 hover:cursor-not-allowed"
             }`}
           >

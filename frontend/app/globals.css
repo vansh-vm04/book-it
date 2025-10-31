@@ -24,3 +24,24 @@ body {
   color: black;
   font-family: Arial, Helvetica, sans-serif;
 }
+
+.bg-btn{
+  background-color: #FFD643;
+}
+
+.bg-btn:hover{
+  background-color: #f7c615;
+}
+
+.bg-card{
+  background-color: #F0F0F0;
+}
+
+.tag{
+  background-color: #D6D6D6;
+  color:#161616
+}
+
+.desc-text{
+  color: #6C6C6C;
+}

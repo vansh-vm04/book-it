@@ -9,24 +9,34 @@ import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 
 export default function Details() {
-  const [experience, setExperience] = useState<Experience | null>({});
+  const [experience, setExperience] = useState<Experience | null>(null);
   const { id } = useParams();
   const { data, loading } = useFetch(
     `${process.env.NEXT_PUBLIC_BACKEND_ORIGIN}/api/experiences/${id}`
   );
-  const uniqueDates = [...(new Set(experience?.slots?.map((s) => s.date)))];
+  const uniqueDates = [...new Set(experience?.slots?.map((s) => s.date))];
   const [selectedDate, setSelectedDate] = useState(uniqueDates[0]);
   const [selectedTime, setSelectedTime] = useState("");
   const [qty, setQty] = useState(1);
-  const slotsForDate = experience?.slots?.filter((s) => s.date === selectedDate);
-  const selectedSlot: Slot[] = experience?.slots?.filter((s) => {
-    if (s.date == selectedDate && s.time == selectedTime) {
-      return s;
-    }
-  }) || [];
+  const slotsForDate = experience?.slots?.filter(
+    (s) => s.date === selectedDate
+  );
+  const selectedSlot: Slot[] =
+    experience?.slots?.filter((s) => {
+      if (s.date == selectedDate && s.time == selectedTime) {
+        return s;
+      }
+    }) || [];
   const router = useRouter();
-  const tax = Math.round(((selectedSlot?.[0]?.price * qty) / 100) * 18) || 0 ;
+  const tax = Math.round(((selectedSlot?.[0]?.price * qty) / 100) * 18) || 0;
   const total = selectedSlot ? selectedSlot[0]?.price * qty + tax : 899;
+
+  useEffect(() => {
+    if (experience) {
+      setSelectedDate(experience?.slots?.[0]?.date);
+      setSelectedTime(experience?.slots?.[0]?.time);
+    }
+  }, [experience]);
 
   useEffect(() => {
     if (data?.data) {
@@ -40,23 +50,28 @@ export default function Details() {
 
   return (
     <div className="min-h-screen bg-white px-4 pt-28 sm:px-8 md:px-12 lg:px-32 max-sm:pt-44 py-8 font-sans">
-      <div onClick={()=>router.push('/')} className="flex mb-6 w-fit hover:cursor-pointer items-center gap-2">
-          <Back />
+      <div
+        onClick={() => router.push("/")}
+        className="flex mb-6 w-fit hover:cursor-pointer items-center gap-2"
+      >
+        <Back />
         <h2 className="text-lg font-medium text-black">Details</h2>
       </div>
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
         <div className="lg:col-span-2">
-          {experience?.image && <Image
-            src={experience?.image}
-            alt={experience?.title}
-            width={800}
-            height={200}
-            className="rounded-xl max-h-[344px] overflow-clip object-cover mb-6"
-          />}
+          {experience?.image && (
+            <Image
+              src={experience?.image}
+              alt={experience?.title}
+              width={800}
+              height={200}
+              className="rounded-xl max-h-[344px] overflow-clip object-cover mb-6"
+            />
+          )}
           <h2 className="text-2xl text-black font-semibold mb-2">
-            {experience.title}
+            {experience?.title}
           </h2>
-          <p className="text-gray-600 mb-6">{experience.description}</p>
+          <p className="text-gray-600 mb-6">{experience?.description}</p>
 
           <p className="text-sm text-black font-medium mb-2">Choose date</p>
           <div className="flex gap-2 mb-6 flex-wrap">
@@ -146,7 +161,9 @@ export default function Details() {
           </div>
           <div className="flex justify-between mb-1">
             <p className="text-gray-500">Subtotal</p>
-            <p className="text-black">₹{selectedSlot?.[0]?.price * qty || "--"}</p>
+            <p className="text-black">
+              ₹{selectedSlot?.[0]?.price * qty || "--"}
+            </p>
           </div>
           <div className="flex justify-between mb-3">
             <p className="text-gray-500">Taxes</p>
@@ -159,7 +176,11 @@ export default function Details() {
           </div>
           <button
             disabled={!selectedDate || !selectedTime}
-            onClick={()=>router.push(`/checkout?experienceId=${experience._id}&date=${selectedDate}&time=${selectedTime}&qty=${qty}`)}
+            onClick={() =>
+              router.push(
+                `/checkout?experienceId=${experience?._id}&date=${selectedDate}&time=${selectedTime}&qty=${qty}`
+              )
+            }
             className={`w-full ${
               selectedDate && selectedTime
                 ? "bg-yellow-400 text-black hover:bg-amber-300 hover:cursor-pointer"

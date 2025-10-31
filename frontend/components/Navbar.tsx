@@ -7,7 +7,6 @@ export const Navbar = () => {
   const [search, setSearch] = useState("");
   const router = useRouter();
   const handleSearch = () => {
-    if(search.trim() == "") return;
     router.push(`/?search=${search}`);
   };
   return (
@@ -15,6 +14,9 @@ export const Navbar = () => {
       <Logo />
       <div className="flex gap-2 items-center w-full sm:w-[444px] flex-wrap">
         <input
+          onKeyDown={(e) => {
+            if (e.key == "Enter") handleSearch();
+          }}
           type="text"
           placeholder="Search experiences"
           className="flex-1 px-4 py-2 placeholder:text-gray-500 rounded-md border border-gray-300 text-black outline-none text-sm"

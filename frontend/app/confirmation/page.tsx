@@ -1,7 +1,8 @@
 "use client"
-import { useSearchParams } from "next/navigation"
+import { useRouter, useSearchParams } from "next/navigation"
 
 export default function Confirmation() {
+  const router = useRouter();
   const params = useSearchParams();
   const refId = params.get("refId") || "";
 
@@ -17,7 +18,7 @@ export default function Confirmation() {
         <h2 className="text-2xl font-semibold mb-1">Booking Confirmed</h2>
         <p className="text-gray-500 text-xl mb-6">Ref ID: {refId}</p>
         <button
-          onClick={() => (window.location.href = "/")}
+          onClick={() => router.push("/")}
           className="bg-gray-200 text-gray-700 px-4 py-1.5 rounded-md text-sm font-medium hover:bg-gray-300 transition"
         >
           Back to Home

@@ -21,6 +21,7 @@ export default function Checkout() {
   const [tax, settax] = useState(0);
   const [subTotal, setsubTotal] = useState(0);
   const [total, settotal] = useState(0);
+  const [discountPrice, setDiscountPrice] = useState(0)
   const [form, setForm] = useState({
     name: "",
     email: "",
@@ -86,6 +87,7 @@ export default function Checkout() {
       }
       console.log(response.data);
       const discount = (total / 100) * response.data.data.discountValue;
+      setDiscountPrice(discount)
       settotal(total - discount);
       setpromoApplied(true);
       setMessage(`Promo code applied! you saved ₹${discount}`);
@@ -247,6 +249,10 @@ export default function Checkout() {
             <p className="text-gray-500">Taxes</p>
             <p>₹{tax}</p>
           </div>
+          {promoApplied && <div className="flex justify-between mb-3">
+            <p className="text-yellow-500">Discount - {form.promo}</p>
+            <p className="text-yellow-500">-₹{discountPrice}</p>
+          </div>}
           <hr className="my-3" />
           <div className="flex justify-between font-semibold mb-4">
             <p>Total</p>

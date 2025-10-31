@@ -16,28 +16,20 @@ export default function Home() {
   );
   const [experiences, setExperiences] = useState<Experience[]>([]);
 
-  const [filtered, setfiltered] = useState([]);
-
   useEffect(() => {
     if (data.data) {
       const exp = data?.data;
       setExperiences(exp);
-      const filteredExp = experiences.filter((e) =>
-        e.title.toLowerCase().includes(search.toLowerCase())
-      );
-      setfiltered(filteredExp);
     }
   }, [data]);
 
-  useEffect(() => {
-    if (search.trim() == "") {
-      setfiltered(experiences)
-    }
-  }, [search]);
+  const filtered = experiences.filter((e) =>
+    e.title.toLowerCase().includes(search.toLowerCase())
+  );
 
-  const viewDetails = (expId: string) => {
-    router.push(`/details/${expId}`);
-  };
+  const viewDetails = (expId:string)=>{
+    router.push(`/details/${expId}`)
+  }
 
   if (loading) {
     return <Loading />;
@@ -45,7 +37,7 @@ export default function Home() {
   return (
     <div className="min-h-screen bg-white px-4 py-8 pt-32 sm:px-8 md:px-12 lg:px-20 max-sm:pt-44 font-sans">
       <main className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6 px-8">
-        {filtered.map((exp:Experience, i) => (
+        {filtered.map((exp, i) => (
           <div
             key={i}
             className="bg-gray-100 border border-gray-200 rounded-xl overflow-hidden shadow-sm hover:shadow-md transition"
@@ -78,10 +70,7 @@ export default function Home() {
                     ₹{exp?.slots[0]?.price ?? "999"}
                   </span>
                 </p>
-                <button
-                  onClick={() => viewDetails(exp?._id)}
-                  className="bg-yellow-400 hover:bg-amber-300 hover:cursor-pointer text-black text-sm font-medium px-3 py-1.5 rounded-md"
-                >
+                <button onClick={()=>viewDetails(exp?._id)} className="bg-yellow-400 hover:bg-amber-300 hover:cursor-pointer text-black text-sm font-medium px-3 py-1.5 rounded-md">
                   View Details
                 </button>
               </div>

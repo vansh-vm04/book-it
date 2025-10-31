@@ -16,9 +16,9 @@ export default function Checkout() {
   const date = searchParams.get("date");
   const time = searchParams.get("time");
   const qty = Number(searchParams.get("qty"));
-  const [loading, setloading] = useState(false)
+  const [loading, setloading] = useState(false);
   const [selectedSlot, setselectedSlot] = useState<Slot[]>([]);
-  const [tax, settax] = useState(0)
+  const [tax, settax] = useState(0);
   const [subTotal, setsubTotal] = useState(0);
   const [total, settotal] = useState(0);
   const [form, setForm] = useState({
@@ -30,42 +30,45 @@ export default function Checkout() {
   const [message, setMessage] = useState("");
   const router = useRouter();
 
-  const fetchExp = async ()=>{
+  const fetchExp = async () => {
     try {
-      setloading(true)
-      const res = await axios.get(`${process.env.NEXT_PUBLIC_BACKEND_ORIGIN}/api/experiences/${id}`);
-      setExperience(res.data.data)
+      setloading(true);
+      const res = await axios.get(
+        `${process.env.NEXT_PUBLIC_BACKEND_ORIGIN}/api/experiences/${id}`
+      );
+      setExperience(res.data.data);
       setloading(false);
     } catch {
-      console.log("Error")
+      console.log("Error");
     }
-  }
+  };
 
-  useEffect(()=>{
+  useEffect(() => {
     fetchExp();
-  },[])
+  }, []);
 
   useEffect(() => {
     if (experience) {
-    const slot:Slot[] = experience?.slots?.filter((s, i) => {
-      if (s.date == date && s.time == time) {
-        setslotIdx(i);
-        return s;
-      }
-    }) || [];
-    setselectedSlot(slot);
-    settax(Math.round(((selectedSlot?.[0]?.price * qty) / 100) * 18))
+      const slot: Slot[] =
+        experience?.slots?.filter((s, i) => {
+          if (s.date == date && s.time == time) {
+            setslotIdx(i);
+            return s;
+          }
+        }) || [];
+      setselectedSlot(slot);
+      settax(Math.round(((selectedSlot?.[0]?.price * qty) / 100) * 18));
     }
-  }, [experience,subTotal]);
+  }, [experience, subTotal]);
 
-  useEffect(()=>{
+  useEffect(() => {
     settotal(selectedSlot?.[0]?.price * qty + tax);
-    setsubTotal(selectedSlot?.[0]?.price * qty)
-  },[selectedSlot])
+    setsubTotal(selectedSlot?.[0]?.price * qty);
+  }, [selectedSlot]);
 
   const applyPromo = async () => {
-    if(!form.promo) {
-      setMessage("Enter a promo code please")
+    if (!form.promo) {
+      setMessage("Enter a promo code please");
       return;
     }
     try {
@@ -94,11 +97,13 @@ export default function Checkout() {
   };
 
   const removePromo = () => {
+    setForm({...form, promo:""})
+    setMessage("")
     settotal(subTotal + tax);
     setpromoApplied(false);
   };
 
-  const handleConfirm = async (e:FormEvent) => {
+  const handleConfirm = async (e: FormEvent) => {
     e.preventDefault();
     try {
       const response = await axios.post(
@@ -113,12 +118,12 @@ export default function Checkout() {
           totalAmount: total,
         }
       );
-      if(!response.data.ok){
+      if (!response.data.ok) {
         //add toast
         return;
       }
 
-      router.push(`/confirmation?refId=${response.data.data.refId}`)
+      router.push(`/confirmation?refId=${response.data.data.refId}`);
     } catch {
       //add toast
     }
@@ -135,7 +140,7 @@ export default function Checkout() {
         <h2 className="text-lg font-medium text-black">Checkout</h2>
       </div>
       <form
-        onSubmit={(e:FormEvent)=>handleConfirm(e)}
+        onSubmit={(e: FormEvent) => handleConfirm(e)}
         className="flex max-sm:flex-wrap gap-8 max-md:gap-4"
       >
         <div className="bg-gray-100 max-md:w-full w-2/3 p-6 h-fit rounded-xl">
@@ -161,6 +166,28 @@ export default function Checkout() {
                 className="w-full border-none bg-gray-200 rounded-md px-3 py-2 text-sm outline-none"
               />
             </div>
+          </div>
+
+          <div className="flex flex-wrap items-center gap-2 text-sm mb-2">
+            <span className="text-gray-600">Available Coupons:</span>
+            <span
+              onClick={() => setForm({ ...form, promo: "WELCOME10" })}
+              className="bg-yellow-100 text-yellow-800 px-2 py-0.5 rounded-md font-medium cursor-pointer hover:bg-yellow-200 transition"
+            >
+              WELCOME10
+            </span>
+            <span
+              onClick={() => setForm({ ...form, promo: "FESTIVE50" })}
+              className="bg-yellow-100 text-yellow-800 px-2 py-0.5 rounded-md font-medium cursor-pointer hover:bg-yellow-200 transition"
+            >
+              FESTIVE50
+            </span>
+            <span
+              onClick={() => setForm({ ...form, promo: "TRAVEL25" })}
+              className="bg-yellow-100 text-yellow-800 px-2 py-0.5 rounded-md font-medium cursor-pointer hover:bg-yellow-200 transition"
+            >
+              TRAVEL25
+            </span>
           </div>
 
           <div className="flex gap-2 ">
